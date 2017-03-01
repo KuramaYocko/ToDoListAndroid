@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import br.senai.sp.informatica.todolist.R;
+import br.senai.sp.informatica.todolist.modelo.SubTarefa;
+import br.senai.sp.informatica.todolist.modelo.Tarefa;
+import br.senai.sp.informatica.todolist.rest.TarefaRest;
 
 /**
  * Created by sn1022208 on 23/01/2017.
@@ -39,13 +42,19 @@ public class NovaTarefaActivity extends AppCompatActivity implements DialogInter
     AlertDialog dialogSubtarefa;
     EditText editInput;
     TextView textView;
+    List<SubTarefa> subTarefas = new ArrayList<>();
+    ArrayAdapter<SubTarefa> adapterSubTarefa;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nova_lista);
 
+        adapterSubTarefa = new ArrayAdapter<SubTarefa>(getBaseContext(), android.R.layout.simple_expandable_list_item_1, subTarefas);
+
         listSubtarefas = (ListView) findViewById(R.id.listSubtarefas);
+        listSubtarefas.setAdapter(adapterSubTarefa);
+        registerForContextMenu(listSubtarefas);
 
         editTitulo = (EditText) findViewById(R.id.editTitulo);
 
@@ -67,6 +76,7 @@ public class NovaTarefaActivity extends AppCompatActivity implements DialogInter
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                dialogSubtarefa.show();
 
             }
         });
@@ -78,7 +88,9 @@ public class NovaTarefaActivity extends AppCompatActivity implements DialogInter
         switch (i) {
             case DialogInterface.BUTTON_POSITIVE:
                 if (!editInput.getText().toString().trim().isEmpty()) {
-
+                    subTarefas.add(new SubTarefa(editInput.getText().toString().trim()));
+                    editInput.setText("");
+                    listSubtarefas.invalidateViews();
                 } else {
                     Toast.makeText(this, R.string.informe_descricao, Toast.LENGTH_SHORT).show();
                 }
@@ -96,7 +108,9 @@ public class NovaTarefaActivity extends AppCompatActivity implements DialogInter
     public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_excluir:
-
+                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+                subTarefas.remove(info.position);
+                listSubtarefas.invalidateViews();
         }
         return super.onContextItemSelected(item);
     }
@@ -112,13 +126,43 @@ public class NovaTarefaActivity extends AppCompatActivity implements DialogInter
         switch (item.getItemId()) {
             case R.id.item_salvar:
                 if (!editTitulo.getText().toString().trim().isEmpty()) {
+                     Tarefa tarefa = new Tarefa();
+                    tarefa.setTitulo(editTitulo.getText().toString().trim());
+                    tarefa.setSubtarefas(subTarefas);
+                    new TaskNovaTarefa().execute(tarefa);
 
+                    //new TaskNovaTarefa().execute(new Tarefa(subTarefas, editInput.getText().toString().trim()));
                 } else {
                     Toast.makeText(this, R.string.informe_titulo, Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public class TaskNovaTarefa extends AsyncTask<Tarefa, Void, Object> {
+        @Override
+        protected Object doInBackground(Tarefa... params) {
+            try {
+                Tarefa tarefa = params[0];
+                TarefaRest.novaTarefa(tarefa, getBaseContext());
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return e;
+            }
+
+        }
+
+        @Override
+        protected void onPostExecute(Object o) {
+            if (o != null) {
+                Exception erro = (Exception) o;
+                Toast.makeText(getBaseContext(), erro.getMessage(), Toast.LENGTH_SHORT).show();
+            } else {
+                finish();
+            }
+        }
     }
 
 
