@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">ToDoList</string>
+    <string name="action_settings">Settings</string>
+    <string name="email">E-mail:</string>
+    <string name="senha">Senha:</string>
+    <string name="logar">Logar</string>
+    <string name="nova_conta">Criar uma conta</string>
+    <string name="nome">Nome:</string>
+    <string name="salvar">Salvar</string>
+    <string name="endereco_summary">Endereço da API REST</string>
+    <string name="endereco">Endereço</string>
+    <string name="hint_endereco">192.168.0.1/ToDoList</string>
+    <string name="manter_conectado">Manter conectado</string>
+    <string name="manter_conectado_summary">Ao selecionar esta opção, o login é realizado automaticamente ao iniciar o App</string>
+    <string name="preferencias">Preferências</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancelar</string>
+    <string name="informe_descricao">Informe a descrição da subtarefa</string>
+    <string name="excluir">Excluir</string>
+    <string name="informe_titulo">Informe o título da tarefa</string>
+    <string name="permissao_negada">Sem conceder a permissão, o aplicativo não funcionará corretamente</string>
+    <string name="todas">Todas</string>
+    <string name="em_aberto">Em aberto</string>
+    <string name="informe_nome">Informe o nome</string>
+    <string name="informe_email">Informe o e-mail</string>
+    <string name="informe_senha">Informe a senha</string>
+
+</resources>
