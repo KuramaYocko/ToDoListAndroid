@@ -22,7 +22,7 @@ public class RestUtil {
             reader = new BufferedReader(new InputStreamReader(inputStream));
             String linha;
 
-            while ((linha = reader.readLine())!= null) {
+            while ((linha = reader.readLine()) != null) {
                 builder.append(linha + "\n");
             }
 
@@ -42,27 +42,29 @@ public class RestUtil {
     }
 
     public static void post(String json, String url, Context context) throws Exception {
-        if (isConexaoDisponivel(context)){
+        if (isConexaoDisponivel(context)) {
             //cria url
-            URL endereco= new URL(url);
-            HttpURLConnection connection = (HttpURLConnection)endereco.openConnection();
+            URL endereco = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) endereco.openConnection();
             connection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
             connection.setRequestMethod("POST");
             connection.setDoOutput(true);
+            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(15000);
             connection.connect();
-            OutputStream output =connection.getOutputStream();
+            OutputStream output = connection.getOutputStream();
             output.write(json.getBytes("UTF-8"));
             output.flush();
             output.close();
             int satus = connection.getResponseCode();
-            if (satus >= HttpURLConnection.HTTP_BAD_REQUEST){
-                throw new RuntimeException("Erro: " +satus);
-            }else {
+            if (satus >= HttpURLConnection.HTTP_BAD_REQUEST) {
+                throw new RuntimeException("Erro: " + satus);
+            } else {
                 // ler o token
             }
 
 
-        }else{
+        } else {
             throw new RuntimeException("SEM CONEXÃO");
         }
 
@@ -86,4 +88,54 @@ public class RestUtil {
             return false;
         }
     }
+
+    public static String get(String url, Context context) throws Exception {
+        if (isConexaoDisponivel(context)) {
+            //cria url
+            URL endereco = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) endereco.openConnection();
+            connection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            connection.setRequestMethod("GET");
+            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(15000);
+            connection.connect();
+            String json = null;
+
+            int satus = connection.getResponseCode();
+            if (satus == HttpURLConnection.HTTP_OK) {
+                InputStream inputStream = connection.getInputStream();
+                json = readStream(inputStream);
+                inputStream.close();
+                connection.disconnect();
+                return json;
+            } else {
+                throw new RuntimeException("Erro: " + satus);
+            }
+        } else {
+            throw new RuntimeException("SEM CONEXÃO");
+        }
+    }
+
+    public static void delete( String url, Context context) throws Exception {
+        if (isConexaoDisponivel(context)) {
+            //cria url
+            URL endereco = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) endereco.openConnection();
+            connection.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+            connection.setRequestMethod("DELETE");
+            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(15000);
+            connection.connect();
+            int satus = connection.getResponseCode();
+            connection.disconnect();
+            if (satus != HttpURLConnection.HTTP_NO_CONTENT) {
+                throw new RuntimeException("Erro: " + satus);
+            }
+
+        } else {
+            throw new RuntimeException("SEM CONEXÃO");
+        }
+
+    }
+
 }

@@ -21,17 +21,16 @@
         <activity
             android:name=".activity.PrincipalActivity"
             android:theme="@style/AppTheme.NoActionBar">
-
-
-        </activity>
-
-        <activity android:name=".activity.PreferenceActivity" />
-        <activity android:name=".activity.NovaTarefaActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <activity android:name=".activity.PreferenceActivity" />
+        <activity android:name=".activity.NovaTarefaActivity">
+
 
         </activity>
         <activity android:name=".activity.DetalheTarefaActivity" />

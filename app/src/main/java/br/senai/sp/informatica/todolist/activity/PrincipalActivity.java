@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import br.senai.sp.informatica.todolist.R;
+import br.senai.sp.informatica.todolist.adapter.PagerAdapter;
 import br.senai.sp.informatica.todolist.util.PermissionUtil;
 
 /**
@@ -47,15 +48,20 @@ public class PrincipalActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                startActivity(new Intent(getBaseContext(), NovaTarefaActivity.class));
 
             }
         });
 
         // viewPager
         viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager.setOffscreenPageLimit(1);
+        viewPager.setAdapter(new PagerAdapter(getSupportFragmentManager()));
 
         // tabLayout
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setTabTextColors(ContextCompat.getColor(getBaseContext(), R.color.black), ContextCompat.getColor(getBaseContext(), R.color.white));
 
     }
 
